@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fa">
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+        @font-face { font-family: "Vazirmatn"; src: url("assets/fonts/Vazirmatn-Medium.woff2") format("woff2"); font-weight: 500; }
+        @font-face { font-family: "Vazirmatn"; src: url("assets/fonts/Vazirmatn-Bold.woff2") format("woff2"); font-weight: 700; }
+        @font-face { font-family: "Vazirmatn"; src: url("assets/fonts/Vazirmatn-Black.woff2") format("woff2"); font-weight: 900; }
+        #root { position: absolute; inset: 0; overflow: hidden; font-family: "Vazirmatn", sans-serif; direction: rtl; }
+
+        .ct-bg { position: absolute; inset: 0; background: #ffffff; }
+        .ct-glow-l { position: absolute; left: -260px; top: -60px; width: 560px; height: 640px; border-radius: 50%;
+          background: radial-gradient(closest-side, rgba(92, 140, 255, 0.7), rgba(92, 140, 255, 0)); }
+        .ct-glow-r { position: absolute; right: -240px; top: -120px; width: 520px; height: 600px; border-radius: 50%;
+          background: radial-gradient(closest-side, rgba(92, 140, 255, 0.62), rgba(92, 140, 255, 0)); }
+
+        .ct-center { position: absolute; left: 0; right: 0; top: 118px; display: flex; flex-direction: column; align-items: center; }
+        .ct-logo { --p: 0%; display: block; font-size: 104px; font-weight: 900; color: #5b80e6; line-height: 1.2;
+          -webkit-mask-image: linear-gradient(to left, #000 calc(var(--p) - 30%), transparent var(--p));
+                  mask-image: linear-gradient(to left, #000 calc(var(--p) - 30%), transparent var(--p)); }
+        .ct-logo i { font-style: normal; color: #f5b72e; }
+        .ct-tag { margin-top: 2px; font-size: 22px; font-weight: 500; color: #5f6a86; }
+        .ct-btn { position: relative; margin-top: 24px; height: 58px; padding: 0 34px; border-radius: 29px;
+          background: linear-gradient(90deg, #3f76ff, #6d9bff); box-shadow: 0 12px 30px rgba(55, 105, 245, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+          display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: #ffffff; white-space: nowrap; }
+        .ct-ripple { position: absolute; left: 50%; top: 50%; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%;
+          border: 3px solid rgba(80, 130, 255, 0.7); }
+        .ct-url { position: absolute; left: 0; right: 0; bottom: 26px; text-align: center; direction: ltr;
+          font-size: 22px; font-weight: 700; color: #1b2233; letter-spacing: 0.01em; }
+        .ct-cursor { position: absolute; left: 0; top: 0; width: 48px; height: 48px; }
+      </style>
+
+      <div id="root" data-composition-id="cta" data-width="936" data-height="519">
+        <div class="ct-bg" id="cta-bg"></div>
+        <div class="ct-glow-l" id="cta-glow-l"></div>
+        <div class="ct-glow-r" id="cta-glow-r"></div>
+
+        <div class="ct-center">
+          <div class="ct-logo" id="cta-logo">کوآپ<i data-layout-ignore>.</i></div>
+          <div class="ct-tag" id="cta-tag">مربی هوشمند بدنسازی، توی جیبت</div>
+          <div class="ct-btn" id="cta-btn"><div class="ct-ripple" id="cta-ripple"></div>همین حالا رایگان شروع کن</div>
+        </div>
+        <div class="ct-url" id="cta-url">coachupgrade.ir</div>
+
+        <svg class="ct-cursor" id="cta-cursor" viewBox="0 0 32 32">
+          <path d="M11 3.5c1.1 0 2 .9 2 2V14l.6-.1V11c0-1.1.9-2 2-2s2 .9 2 2v3l.5-.1v-1.9c0-1.1.9-2 2-2s2 .9 2 2v2.4l.4-.1c1.1 0 2 .9 2 2V22c0 3.9-3.1 7-7 7h-2.3c-2 0-3.9-.9-5.2-2.4L4.6 20.6c-.7-.8-.7-2.1.1-2.8.8-.7 2-.7 2.8 0L9 19.3V5.5c0-1.1.9-2 2-2z" fill="#ffffff" stroke="#111827" stroke-width="1.6" stroke-linejoin="round" />
+          <path d="M13.6 14.2v5M17.6 14v5M21.6 14.4v4.6" stroke="#111827" stroke-width="1.3" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <script>
+        (function () {
+          const tl = gsap.timeline({ paused: true });
+
+          // white field takes over from the dashboard's white-out
+          tl.fromTo("#cta-bg", { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power1.out" }, 0);
+          tl.fromTo(["#cta-glow-l", "#cta-glow-r"], { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.9, ease: "power2.out" }, 0.15);
+          tl.to("#cta-glow-l", { x: 30, y: 10, scale: 1.06, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.05);
+          tl.to("#cta-glow-r", { x: -24, y: 16, scale: 1.08, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.05);
+
+          // wordmark wipes in right → left with blur, then tagline and button
+          tl.fromTo("#cta-logo", { "--p": "0%", filter: "blur(12px)", scale: 1.08 }, { "--p": "135%", filter: "blur(0px)", scale: 1, duration: 0.8, ease: "power2.out" }, 0.25);
+          tl.fromTo("#cta-tag", { opacity: 0, y: 10, filter: "blur(6px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.45, ease: "power2.out" }, 0.7);
+          tl.fromTo("#cta-btn", { opacity: 0, scale: 0.7, filter: "blur(8px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "back.out(1.8)" }, 0.8);
+          tl.fromTo("#cta-url", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.out" }, 1.0);
+
+          // cursor arrives and presses the button (button centre ≈ 468, 352)
+          tl.fromTo("#cta-cursor", { x: 720, y: 520, opacity: 0 }, { x: 560, y: 420, opacity: 1, duration: 0.45, ease: "power1.out" }, 1.0);
+          tl.to("#cta-cursor", { x: 470, y: 348, duration: 0.4, ease: "power3.out" }, 1.45);
+          tl.to(["#cta-btn", "#cta-cursor"], { scale: 0.9, duration: 0.09, ease: "power1.in" }, 1.8);
+          tl.to(["#cta-btn", "#cta-cursor"], { scale: 1, duration: 0.35, ease: "back.out(3)" }, 1.9);
+          tl.fromTo("#cta-ripple", { scale: 0.4, opacity: 0 }, { scale: 2.4, opacity: 0.8, duration: 0.18, ease: "power2.out" }, 1.82);
+          tl.to("#cta-ripple", { opacity: 0, duration: 0.45, ease: "power1.out" }, 2.0);
+          tl.to("#cta-btn", { boxShadow: "0 16px 44px rgba(55, 105, 245, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4)", duration: 0.4, ease: "power2.out" }, 1.9);
+
+          window.__timelines["cta"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

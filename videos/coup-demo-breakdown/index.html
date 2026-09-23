@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fa">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <title>CoUp — Product Demo Breakdown (FA)</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Vazirmatn"; src: url("assets/fonts/Vazirmatn-Light.woff2") format("woff2"); font-weight: 300; }
+      @font-face { font-family: "Vazirmatn"; src: url("assets/fonts/Vazirmatn-Regular.woff2") format("woff2"); font-weight: 400; }
+      @font-face { font-family: "Vazirmatn"; src: url("assets/fonts/Vazirmatn-Medium.woff2") format("woff2"); font-weight: 500; }
+      @font-face { font-family: "Vazirmatn"; src: url("assets/fonts/Vazirmatn-Bold.woff2") format("woff2"); font-weight: 700; }
+      @font-face { font-family: "Vazirmatn"; src: url("assets/fonts/Vazirmatn-Black.woff2") format("woff2"); font-weight: 900; }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1080px; overflow: hidden; background: #7fa7fd; }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: "Vazirmatn", sans-serif;
+        direction: rtl;
+        background: linear-gradient(180deg, #5d87ee 0%, #6590f2 15%, #93b4fc 36%, #b3cbfc 62%, #cbdafb 100%);
+      }
+
+      /* ---------- header ---------- */
+      #brand {
+        position: absolute; top: 44px; right: 72px;
+        font-size: 44px; font-weight: 700; color: #ffffff; letter-spacing: -0.01em; line-height: 1.1;
+      }
+      #timecode {
+        position: absolute; top: 112px; right: 72px;
+        font-size: 34px; font-weight: 500; color: rgba(255, 255, 255, 0.4); line-height: 1; direction: ltr;
+      }
+      #title-a {
+        position: absolute; top: 46px; left: 72px; direction: rtl;
+        font-size: 44px; font-weight: 900; color: #ffffff; line-height: 1.1;
+      }
+      #title-b {
+        position: absolute; top: 102px; left: 72px; direction: rtl;
+        font-size: 42px; font-weight: 300; color: #ffffff; line-height: 1.1;
+      }
+
+      /* ---------- preview card ---------- */
+      #card {
+        position: absolute; left: 72px; top: 188px; width: 936px; height: 519px;
+        border-radius: 22px; overflow: hidden; background: #ffffff;
+        box-shadow: 0 18px 50px rgba(40, 80, 190, 0.28), 0 0 0 2px rgba(255, 255, 255, 0.55);
+      }
+      .scene-slot { position: absolute; left: 0; top: 0; width: 936px; height: 519px; }
+
+      /* ---------- ruler + playhead ---------- */
+      #ruler { position: absolute; left: 84px; top: 759px; width: 912px; height: 24px; }
+      .tick { position: absolute; top: 0; width: 3px; height: 22px; border-radius: 2px; background: #5f6d91; opacity: 0.75; }
+      #playhead { position: absolute; left: 0; top: 717px; width: 0; height: 230px; z-index: 5; }
+      #ph-tri {
+        position: absolute; left: -12px; top: 0; width: 24px; height: 18px;
+        background: #f7fbff; clip-path: polygon(0 0, 100% 0, 50% 100%);
+      }
+      #ph-line { position: absolute; left: -1.5px; top: 16px; width: 3px; height: 212px; background: rgba(247, 251, 255, 0.9); }
+
+      /* ---------- section tabs ---------- */
+      .tab {
+        position: absolute; top: 822px; height: 120px; border-radius: 20px;
+        background: #e8eefc; box-shadow: 0 8px 22px rgba(60, 100, 200, 0.18), inset 0 0 0 2px rgba(255, 255, 255, 0.7);
+        display: flex; align-items: center; justify-content: center; overflow: hidden;
+      }
+      .tab-fill { position: absolute; inset: 0; background: #6b99fb; opacity: 0; }
+      .tab-label { position: relative; font-size: 34px; font-weight: 500; color: #4f5566; }
+      #script-label {
+        position: absolute; top: 966px; left: 0; width: 1080px; text-align: center;
+        font-size: 44px; font-weight: 700; color: #3d67d6;
+      }
+      #end-veil { position: absolute; inset: 0; background: #2b2f3d; opacity: 0; z-index: 20; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="32.2" data-width="1080" data-height="1080">
+      <div id="brand">کوآپ</div>
+      <div id="timecode" data-layout-ignore>۰۰:۰۰</div>
+      <div id="title-a">دموی محصول</div>
+      <div id="title-b">کالبدشکافی</div>
+
+      <div id="card">
+        <div id="slot-hook" class="scene-slot" data-composition-id="hook" data-composition-src="compositions/hook.html"
+          data-start="0" data-duration="7.6" data-track-index="1" data-width="936" data-height="519"></div>
+        <div id="slot-reveal" class="scene-slot" data-composition-id="reveal" data-composition-src="compositions/reveal.html"
+          data-start="7.2" data-duration="6.1" data-track-index="2" data-width="936" data-height="519"></div>
+        <div id="slot-demo" class="scene-slot" data-composition-id="demo" data-composition-src="compositions/demo.html"
+          data-start="12.9" data-duration="10.1" data-track-index="1" data-width="936" data-height="519"></div>
+        <div id="slot-growth" class="scene-slot" data-composition-id="growth" data-composition-src="compositions/growth.html"
+          data-start="22.6" data-duration="5.8" data-track-index="2" data-width="936" data-height="519"></div>
+        <div id="slot-cta" class="scene-slot" data-composition-id="cta" data-composition-src="compositions/cta.html"
+          data-start="28" data-duration="4.2" data-track-index="1" data-width="936" data-height="519"></div>
+      </div>
+
+      <div id="ruler"></div>
+
+      <div class="tab" id="tab-0"><div class="tab-fill"></div><div class="tab-label">هوک</div></div>
+      <div class="tab" id="tab-1"><div class="tab-fill"></div><div class="tab-label">معرفی</div></div>
+      <div class="tab" id="tab-2"><div class="tab-fill"></div><div class="tab-label">دمو</div></div>
+      <div class="tab" id="tab-3"><div class="tab-fill"></div><div class="tab-label">رشد</div></div>
+      <div class="tab" id="tab-4"><div class="tab-fill"></div><div class="tab-label">اقدام</div></div>
+
+      <div id="playhead"><div id="ph-tri"></div><div id="ph-line"></div></div>
+      <div id="script-label">سناریو</div>
+      <div id="end-veil"></div>
+
+      <!-- sound design (bundled offline SFX library) -->
+      <audio id="sfx-open" src="assets/sfx/whoosh.mp3" data-start="0.05" data-duration="0.57" data-track-index="10" data-volume="0.35"></audio>
+      <audio id="sfx-click-today" src="assets/sfx/click.mp3" data-start="3.85" data-duration="0.37" data-track-index="11" data-volume="0.45"></audio>
+      <audio id="sfx-pop-month" src="assets/sfx/pop.mp3" data-start="4.0" data-duration="0.72" data-track-index="12" data-volume="0.3"></audio>
+      <audio id="sfx-out-hook" src="assets/sfx/whoosh-short.mp3" data-start="6.9" data-duration="0.57" data-track-index="10" data-volume="0.3"></audio>
+      <audio id="sfx-logo" src="assets/sfx/sparkle.mp3" data-start="7.5" data-duration="1.8" data-track-index="11" data-volume="0.25"></audio>
+      <audio id="sfx-panel" src="assets/sfx/whoosh.mp3" data-start="9.9" data-duration="0.57" data-track-index="12" data-volume="0.35"></audio>
+      <audio id="sfx-type-1" src="assets/sfx/typing.mp3" data-start="10.9" data-duration="1.54" data-track-index="10" data-volume="0.3"></audio>
+      <audio id="sfx-orb" src="assets/sfx/whoosh-short.mp3" data-start="12.8" data-duration="0.57" data-track-index="11" data-volume="0.3"></audio>
+      <audio id="sfx-type-2" src="assets/sfx/typing.mp3" data-start="13.6" data-duration="1.54" data-track-index="12" data-volume="0.3"></audio>
+      <audio id="sfx-list" src="assets/sfx/whoosh.mp3" data-start="16.0" data-duration="0.57" data-track-index="10" data-volume="0.3"></audio>
+      <audio id="sfx-overload" src="assets/sfx/pop.mp3" data-start="21.3" data-duration="0.72" data-track-index="11" data-volume="0.3"></audio>
+      <audio id="sfx-growth" src="assets/sfx/impact-bass-1.mp3" data-start="22.6" data-duration="2.12" data-track-index="12" data-volume="0.3"></audio>
+      <audio id="sfx-dash" src="assets/sfx/whoosh-short.mp3" data-start="25.1" data-duration="0.57" data-track-index="10" data-volume="0.3"></audio>
+      <audio id="sfx-cta" src="assets/sfx/chime.mp3" data-start="28.2" data-duration="2.54" data-track-index="11" data-volume="0.3"></audio>
+      <audio id="sfx-cta-click" src="assets/sfx/click.mp3" data-start="29.8" data-duration="0.37" data-track-index="12" data-volume="0.45"></audio>
+    </div>
+
+    <script>
+      (function () {
+        const TOTAL = 32.2;
+        const STRIP_L = 70, STRIP_R = 1010, GAP = 12;
+        const SECTIONS = [0, 7.2, 13.0, 22.8, 28.0, TOTAL]; // Hook, Reveal, Demo, Growth, CTA
+        const xAt = (t) => STRIP_R - (t / TOTAL) * (STRIP_R - STRIP_L); // RTL: playhead travels right → left
+
+        // tabs sized to their section's share of the timeline
+        for (let i = 0; i < 5; i++) {
+          const el = document.getElementById("tab-" + i);
+          const right = xAt(SECTIONS[i]) - (i === 0 ? 0 : GAP / 2);
+          const left = xAt(SECTIONS[i + 1]) + (i === 4 ? 0 : GAP / 2);
+          el.style.left = left + "px";
+          el.style.width = right - left + "px";
+        }
+        // ruler ticks
+        const ruler = document.getElementById("ruler");
+        const N = 22;
+        for (let i = 0; i < N; i++) {
+          const t = document.createElement("div");
+          t.className = "tick";
+          t.style.left = (i * (912 - 3)) / (N - 1) + "px";
+          ruler.appendChild(t);
+        }
+
+        const tl = gsap.timeline({ paused: true });
+
+        // playhead: constant speed across the whole strip
+        tl.fromTo("#playhead", { x: xAt(0) }, { x: xAt(TOTAL), duration: TOTAL, ease: "none" }, 0);
+
+        // timecode in Persian digits, derived from timeline time only
+        const fa = (n) => String(n).padStart(2, "0").replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
+        const tc = document.getElementById("timecode");
+        const clock = { t: 0 };
+        tl.fromTo(clock, { t: 0 }, {
+          t: TOTAL, duration: TOTAL, ease: "none",
+          onUpdate: () => { tc.textContent = fa(0) + ":" + fa(Math.floor(clock.t)); },
+        }, 0);
+
+        // active tab: fill in as the playhead enters, fade out as it leaves
+        for (let i = 0; i < 5; i++) {
+          const fill = "#tab-" + i + " .tab-fill";
+          const label = "#tab-" + i + " .tab-label";
+          tl.fromTo(fill, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power2.out" }, Math.max(0, SECTIONS[i] - 0.05));
+          tl.fromTo(label, { color: "#4f5566" }, { color: "#1f3570", duration: 0.25, ease: "power2.out" }, Math.max(0, SECTIONS[i] - 0.05));
+          if (i < 4) {
+            tl.to(fill, { opacity: 0, duration: 0.25, ease: "power2.in" }, SECTIONS[i + 1] - 0.05);
+            tl.to(label, { color: "#4f5566", duration: 0.25, ease: "power2.in" }, SECTIONS[i + 1] - 0.05);
+          }
+        }
+
+        // end: dim the whole frame like the reference's last beat
+        tl.fromTo("#end-veil", { opacity: 0 }, { opacity: 0.62, duration: 0.55, ease: "power1.in" }, 31.6);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
