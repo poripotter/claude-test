@@ -34,5 +34,5 @@ underneath. Only the script and scenes change — they must be about CoUp.
 
 - User asked for Persian: all copy is Persian, RTL layout (brand right, playhead travels right→left), Persian digits,
   Vazirmatn (OFL, vendored in assets/fonts) as the typeface.
-- No HeyGen credential and no local music model: SFX from the bundled offline library; no music bed.
+- Music bed: audio track extracted from the user's reference video (assets/bgm/reference-track.m4a); bundled SFX mixed underneath at half volume.
 - CDN is blocked in this environment: GSAP is vendored in assets/gsap.min.js.
