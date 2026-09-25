@@ -14,107 +14,92 @@
       html, body { width: 1080px; height: 1080px; overflow: hidden; background: transparent; }
       #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: "Vazirmatn", sans-serif; }
 
-      #ring { position: absolute; left: 0; top: 0; width: 1080px; height: 1080px; transform-origin: 540px 540px; }
-      #lit { filter: drop-shadow(0 0 10px rgba(63, 115, 245, 0.45)); }
+      #stack { position: absolute; inset: 0; transform: scale(1.2); display: flex; flex-direction: column; align-items: center; justify-content: center; direction: rtl; }
+      #after { font-size: 58px; font-weight: 500; color: #2a3a63; line-height: 1.2; }
+      #row { display: flex; align-items: center; gap: 30px; direction: rtl; margin-top: -10px; }
+      #win { position: relative; width: 180px; height: 260px; overflow: hidden; }
+      #col { position: absolute; left: 0; top: 0; width: 180px; }
+      #col div { height: 260px; line-height: 260px; text-align: center; font-size: 250px; font-weight: 900; color: #2f63ec; }
+      #weeks { font-size: 120px; font-weight: 900; color: #0f1933; line-height: 1.25; }
 
-      #core { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; direction: rtl; }
-      #after { font-size: 60px; font-weight: 500; color: #7d97d8; line-height: 1.2; margin-bottom: -6px; }
-      #row { display: flex; align-items: center; gap: 26px; direction: rtl; }
-      #win { position: relative; width: 170px; height: 250px; overflow: hidden;
-        -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
-                mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%); }
-      #col { position: absolute; left: 0; top: 0; width: 170px; }
-      #col div { height: 250px; line-height: 250px; text-align: center; font-size: 236px; font-weight: 900; color: #2f63ec; }
-      #weeks { font-size: 104px; font-weight: 700; color: #2f63ec; line-height: 1.3; }
+      /* week track: 8 pills, filled right → left */
+      #track { display: flex; gap: 16px; direction: rtl; margin-top: 34px; }
+      .pill { position: relative; width: 62px; height: 16px; border-radius: 8px; background: #cdd9f7; overflow: hidden; }
+      .fill { position: absolute; inset: 0; border-radius: 8px; background: #2f63ec; transform-origin: 100% 50%; }
     </style>
   </head>
   <body>
     <div id="root" data-composition-id="after-8-weeks" data-start="0" data-duration="2.1" data-width="1080" data-height="1080">
-      <svg id="ring" viewBox="0 0 1080 1080" data-layout-ignore>
-        <defs>
-          <linearGradient id="seg-grad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#7aa4ff" />
-            <stop offset="100%" stop-color="#2f63ec" />
-          </linearGradient>
-        </defs>
-        <g id="base"></g>
-        <g id="lit"></g>
-      </svg>
-
-      <div id="core">
+      <div id="stack">
         <div id="after">بعد از</div>
         <div id="row">
           <div id="win"><div id="col" data-layout-allow-overflow></div></div>
           <div id="weeks">هفته</div>
         </div>
+        <div id="track"></div>
       </div>
     </div>
 
     <script>
       (function () {
-        const NS = "http://www.w3.org/2000/svg";
-        const R = 356, C = 2 * Math.PI * R, SEG = 8, GAP_DEG = 9;
-        const L = (C * (360 / SEG - GAP_DEG)) / 360;
-        const base = document.getElementById("base"), lit = document.getElementById("lit");
-        const mk = (parent, i, stroke, width) => {
-          const c = document.createElementNS(NS, "circle");
-          c.setAttribute("cx", 540); c.setAttribute("cy", 540); c.setAttribute("r", R);
-          c.setAttribute("fill", "none"); c.setAttribute("stroke", stroke); c.setAttribute("stroke-width", width);
-          c.setAttribute("stroke-linecap", "round");
-          c.setAttribute("stroke-dasharray", "0 " + C.toFixed(2));
-          // segment i starts at 12 o'clock and runs clockwise
-          c.setAttribute("transform", "rotate(" + (-90 + i * (360 / SEG) + GAP_DEG / 2) + " 540 540)");
-          parent.appendChild(c);
-          return c;
-        };
-        const baseSegs = [], litSegs = [];
-        for (let i = 0; i < SEG; i++) { baseSegs.push(mk(base, i, "rgba(91, 128, 230, 0.2)", 16)); litSegs.push(mk(lit, i, "url(#seg-grad)", 16)); }
+        const H = 260;
+        const col = document.getElementById("col");
+        "۱۲۳۴۵۶۷۸۹".split("").forEach((d) => {
+          const e = document.createElement("div");
+          e.textContent = d;
+          e.setAttribute("data-layout-allow-overflow", "");
+          col.appendChild(e);
+        });
+        const track = document.getElementById("track");
+        const pills = [], fills = [];
+        for (let i = 0; i < 8; i++) {
+          const p = document.createElement("div"); p.className = "pill";
+          const f = document.createElement("div"); f.className = "fill";
+          p.appendChild(f); track.appendChild(p); pills.push(p); fills.push(f);
+        }
 
-        // digit column ۱..۹ (۹ only catches the settle overshoot)
-        const H = 250, col = document.getElementById("col");
-        "۱۲۳۴۵۶۷۸۹".split("").forEach((d) => { const e = document.createElement("div"); e.textContent = d; e.setAttribute("data-layout-allow-overflow", ""); col.appendChild(e); });
-
-        const on = (n) => (n.toFixed(2) + " " + C.toFixed(2));
-        const off = "0 " + C.toFixed(2);
         const tl = gsap.timeline({ paused: true });
 
         // ---------- in ----------
-        tl.fromTo("#ring", { rotation: -40, scale: 0.86, opacity: 0 }, { rotation: 0, scale: 1, opacity: 1, duration: 0.6, ease: "expo.out" }, 0);
-        baseSegs.forEach((s, i) => tl.fromTo(s, { attr: { "stroke-dasharray": off } }, { attr: { "stroke-dasharray": on(L) }, duration: 0.34, ease: "power3.out" }, 0.02 + i * 0.025));
-        tl.fromTo("#after", { opacity: 0, y: 18, filter: "blur(10px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, 0.08);
-        tl.fromTo("#row", { opacity: 0, scale: 0.88, filter: "blur(14px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }, 0.12);
+        tl.fromTo("#after", { opacity: 0, y: 24, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }, 0.02);
+        tl.fromTo("#win", { opacity: 0, y: 60, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "expo.out" }, 0.06);
+        tl.fromTo("#weeks", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.55, ease: "expo.out" }, 0.1);
+        // pills unfold from the centre outwards
+        pills.forEach((p, i) => {
+          const d = Math.abs(i - 3.5);
+          tl.fromTo(p, { opacity: 0, scaleX: 0.2, y: 18 }, { opacity: 1, scaleX: 1, y: 0, duration: 0.45, ease: "expo.out" }, 0.1 + d * 0.035);
+        });
+        fills.forEach((f) => tl.set(f, { scaleX: 0 }, 0));
 
-        // ---------- the weeks tick by: one proxy drives roll, smear and ring ----------
+        // ---------- weeks tick by ----------
         const wk = { w: 0 };
-        const colEl = document.getElementById("col");
         const paint = () => {
           const w = wk.w, frac = w - Math.floor(w);
-          const smear = Math.sin(Math.PI * Math.min(1, Math.max(0, frac)));
-          colEl.style.transform = "translateY(" + (-w * H).toFixed(2) + "px) scaleY(" + (1 + 0.08 * smear).toFixed(3) + ")";
-          colEl.style.filter = "blur(" + (6 * smear).toFixed(2) + "px)";
+          const s = Math.sin(Math.PI * Math.min(1, Math.max(0, frac)));
+          col.style.transform = "translateY(" + (-w * H).toFixed(2) + "px) scaleY(" + (1 + 0.06 * s).toFixed(3) + ")";
+          col.style.filter = s > 0.02 ? "blur(" + (4 * s).toFixed(2) + "px)" : "none";
         };
         paint();
-        const T = [0.4, 0.53, 0.645, 0.75, 0.855, 0.965, 1.085];
+        const T = [0.42, 0.55, 0.665, 0.77, 0.875, 0.985, 1.105];
         const D = [0.11, 0.1, 0.09, 0.09, 0.095, 0.105, 0.26];
         for (let k = 1; k <= 7; k++) {
-          tl.fromTo(wk, { w: k - 1 }, { w: k, duration: D[k - 1], ease: k === 7 ? "back.out(2.4)" : "expo.inOut", immediateRender: false, onUpdate: paint }, T[k - 1]);
+          tl.fromTo(wk, { w: k - 1 }, { w: k, duration: D[k - 1], ease: k === 7 ? "back.out(2.2)" : "expo.inOut", immediateRender: false, onUpdate: paint }, T[k - 1]);
         }
-        // week 1 lights with the entrance, each next segment lights as its week lands
-        tl.fromTo(litSegs[0], { attr: { "stroke-dasharray": off } }, { attr: { "stroke-dasharray": on(L) }, duration: 0.26, ease: "power2.out" }, 0.2);
-        for (let k = 1; k <= 7; k++) {
-          tl.fromTo(litSegs[k], { attr: { "stroke-dasharray": off } }, { attr: { "stroke-dasharray": on(L) }, duration: k === 7 ? 0.22 : 0.16, ease: "power2.out" }, T[k - 1] + D[k - 1] * 0.45);
-        }
+        // pill k fills as week k lands, with a small lift
+        const lands = [0.3].concat(T.map((t, i) => t + D[i] * 0.5));
+        lands.forEach((t, k) => {
+          tl.to(fills[k], { scaleX: 1, duration: 0.18, ease: "power3.out" }, t);
+          tl.fromTo(pills[k], { scaleY: 1 }, { scaleY: 1.5, duration: 0.09, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, t);
+        });
 
-        // ---------- arrival on week 8: the full ring breathes once ----------
-        tl.to("#ring", { scale: 1.035, duration: 0.12, ease: "power2.out" }, 1.25);
-        tl.to("#ring", { scale: 1, duration: 0.24, ease: "power2.inOut" }, 1.37);
-        tl.fromTo("#lit", { filter: "drop-shadow(0 0 10px rgba(63, 115, 245, 0.45))" }, { filter: "drop-shadow(0 0 26px rgba(63, 115, 245, 0.85))", duration: 0.14, ease: "power2.out" }, 1.24);
-        tl.to("#lit", { filter: "drop-shadow(0 0 12px rgba(63, 115, 245, 0.5))", duration: 0.3, ease: "power2.inOut" }, 1.38);
-        tl.fromTo("#weeks", { x: 0 }, { x: -8, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1 }, 1.25);
+        // ---------- arrival on 8 ----------
+        tl.fromTo("#win", { scale: 1 }, { scale: 1.07, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1, immediateRender: false }, 1.26);
+        pills.forEach((p, i) => tl.fromTo(p, { y: 0 }, { y: -8, duration: 0.1, ease: "sine.out", yoyo: true, repeat: 1, immediateRender: false }, 1.38 + (7 - i) * 0.015));
 
-        // ---------- out ----------
-        tl.to("#core", { opacity: 0, scale: 1.12, y: -8, filter: "blur(16px)", duration: 0.36, ease: "expo.in" }, 1.64);
-        tl.to("#ring", { rotation: 28, scale: 1.12, opacity: 0, duration: 0.36, ease: "expo.in" }, 1.62);
+        // ---------- out: lift away in a quick cascade ----------
+        tl.to("#after", { opacity: 0, y: -40, filter: "blur(8px)", duration: 0.32, ease: "expo.in" }, 1.62);
+        tl.to("#row", { opacity: 0, y: -40, filter: "blur(8px)", duration: 0.32, ease: "expo.in" }, 1.66);
+        pills.forEach((p, i) => tl.to(p, { opacity: 0, y: -30, scaleX: 0.3, duration: 0.28, ease: "expo.in" }, 1.68 + Math.abs(i - 3.5) * 0.02));
 
         window.__timelines["after-8-weeks"] = tl;
       })();
