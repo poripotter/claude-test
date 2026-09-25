@@ -4,3 +4,4 @@ videos/*/snapshots/
 .DS_Store
 videos/*/renders/work-*/
 videos/*/renders/*.mov
+videos/*/renders/*.zip
